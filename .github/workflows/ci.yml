@@ -4,6 +4,7 @@ on:
   push:
     branches: [master, main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -22,5 +23,6 @@ jobs:
           node --check js/calc.js
           node --check js/app.js
           node --check js/vendor/canvas-confetti.js
+          node --check sw.js
       - name: Unit tests (zero dependencies)
         run: node --test test/*.test.js

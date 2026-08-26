@@ -1085,3 +1085,85 @@ body::before {
 .calculate-btn:active {
   animation: jello 0.6s ease both;
 }
+
+
+/* ── 实用性四件套:模拟器 / 多目标速览 / 考试倒计时 ── */
+.sim-block {
+  background: var(--paper-deep);
+  border: var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-top: 16px;
+  animation: fadeInUp .5s ease both .35s;
+}
+
+.sim-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.sim-total {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.sim-total.good { color: var(--ok); }
+.sim-total.bad { color: var(--bad); }
+
+.target-quick {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeInUp .5s ease both .45s;
+}
+
+.tq-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  background: var(--paper-deep);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+.tq-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  flex: none;
+}
+
+.tq-dot.ok { background: var(--ok); }
+.tq-dot.warn { background: var(--accent); }
+.tq-dot.bad { background: var(--bad); }
+
+.tq-goal { font-weight: 600; min-width: 56px; }
+.tq-txt { color: var(--ink-soft); }
+
+.exam-date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* 临考 7 天:徽章转红脉冲 */
+.countdown-badge.urgent {
+  background: var(--bad-wash);
+  border-color: var(--bad);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.countdown-badge.urgent .countdown-text {
+  color: var(--bad);
+  font-weight: 600;
+}

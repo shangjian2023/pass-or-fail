@@ -300,6 +300,8 @@
 
     playSound();
     fireConfetti(r.status);
+    buildTargetQuick(r);
+    initSim(r);
   }
 
   var animTimer = null;
@@ -314,6 +316,84 @@
       if (current >= target) { current = target; clearInterval(animTimer); }
       element.textContent = Math.round(current);
     }, duration / steps);
+  }
+
+  // ── 期末模拟器:拖动「假设期末考 X 分」,实时算总评 ─────────
+  function initSim(r) {
+    var s = $('simSlider');
+    s.value = Math.min(100, Math.max(0, r.needed));
+    updateSim(s.value);
+  }
+
+  function updateSim(v) {
+    var fin = parseInt(v, 10);
+    $('simSliderValue').textContent = fin + '分';
+    var el = $('simTotal');
+    var t = Calc.computeTotal({
+      usual: state.usualScore,
+      usualWeight: state.weight,
+      midterm: state.midtermScore,
+      midtermWeight: state.midtermWeight,
+      final: fin
+    });
+    if (!t.ok) { el.className = 'sim-total bad'; el.textContent = t.error; return; }
+    var pass = t.total >= 60;
+    el.className = 'sim-total ' + (pass ? 'good' : 'bad');
+    el.textContent = '总评 ' + t.total + ' 分 · ' + (pass ? '稳过 ✓' : '挂科 ✗');
+  }
+
+  // ── 多目标速览:及格/优秀/满绩一次算清,不用来回拖滑杆 ────────
+  function buildTargetQuick(r) {
+    var host = $('targetQuick');
+    if (!host) return;
+    var labels = { 60: '及格', 80: '优秀', 90: '满绩' };
+    var html = '';
+    [60, 80, 90].forEach(function (g) {
+      var q = Calc.computeNeeded({
+        usual: state.usualScore,
+        usualWeight: state.weight,
+        midterm: state.midtermScore,
+        midtermWeight: state.midtermWeight,
+        goal: g
+      });
+      var dot = !q.ok || q.status === 'impossible' ? 'bad' : (q.status === 'easy' ? 'ok' : 'warn');
+      var txt = !q.ok ? q.error
+        : q.status === 'easy' ? '已经稳过,躺平'
+        : q.status === 'impossible' ? '需期末 ' + q.rawNeeded + ' 分,神仙难救'
+        : '期末 ≥ ' + q.needed + ' 分';
+      html += '<div class="tq-row"><span class="tq-dot ' + dot + '"></span>'
+        + '<span class="tq-goal">' + labels[g] + ' ' + g + '</span>'
+        + '<span class="tq-txt">' + txt + '</span></div>';
+    });
+    host.innerHTML = html;
+  }
+
+  // ── 考试倒计时:日期存本地,徽章实时显示,临期 7 天转红脉冲 ────
+  var EXAM_KEY = 'pof:examDate';
+
+  function setExamDate(v) {
+    try { localStorage.setItem(EXAM_KEY, v || ''); } catch (e) { /* 隐私模式 */ }
+    $('examDate').value = v || '';
+    updateExamBadge();
+  }
+
+  function updateExamBadge() {
+    var badge = document.querySelector('.countdown-text');
+    var pill = document.querySelector('.countdown-badge');
+    var hint = $('examHint');
+    var v = '';
+    try { v = localStorage.getItem(EXAM_KEY) || ''; } catch (e) { /* 忽略 */ }
+    if (!v) {
+      if (badge) badge.textContent = '急救模式';
+      if (hint) hint.textContent = '';
+      if (pill) pill.classList.remove('urgent');
+      return;
+    }
+    var days = Math.ceil((new Date(v + 'T23:59:59') - new Date()) / 86400000);
+    var label = days > 0 ? '距考试 ' + days + ' 天' : days === 0 ? '今天考试!' : '考完 ' + (-days) + ' 天';
+    if (badge) badge.textContent = label;
+    if (hint) hint.textContent = label;
+    if (pill) pill.classList.toggle('urgent', days >= 0 && days <= 7);
   }
 
   // ── 分享 ──────────────────────────────────────────────────────
@@ -460,6 +540,11 @@
     updateFinalWeightHint();
   }
 
+  var savedDate = '';
+  try { savedDate = localStorage.getItem(EXAM_KEY) || ''; } catch (e) {}
+  $('examDate').value = savedDate;
+  updateExamBadge();
+
   document.addEventListener('keydown', function (e) {
     // 正在输入框里打字时不要抢按键(否则自定义权重里输 40 会同时填进平时分)
     var tag = (e.target && e.target.tagName) || '';
@@ -478,4 +563,9 @@
   restoreState();
   applyRestoredState();
   updateRescueCount();
+
+  // PWA:离线缓存(仅 https 生产环境,file:// 下静默跳过)
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* 离线缓存失败不影响使用 */ });
+  }
 })();

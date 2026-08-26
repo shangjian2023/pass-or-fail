@@ -10,6 +10,7 @@
     <meta property="og:description" content="期末至少要考多少分才能不挂科?输入成绩,立刻告诉你。">
     <meta property="og:type" content="website">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚑</text></svg>">
+    <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="css/vendor/modern-normalize.css">
     <link rel="stylesheet" href="css/vendor/animations.css">
     <link rel="stylesheet" href="css/vendor/hover.css">
@@ -141,6 +142,12 @@
                 <input type="range" class="slider" id="goalSlider" min="0" max="100" value="60" 
                        oninput="updateSliderValue(this.value)">
             </div>
+            <div class="exam-date">
+                <span class="custom-weight-label">考试日期:</span>
+                <input type="date" class="custom-weight-input" id="examDate" onchange="setExamDate(this.value)">
+                <span class="weight-hint" id="examHint" style="margin:0"></span>
+            </div>
+        </div>
         </div>
 
         <div class="calculate-section">
@@ -158,6 +165,16 @@
             <div class="result-label float-animation-delay-4">期末考至少需要</div>
             <div class="result-action float-animation-delay-5" id="resultAction">保持现状，稳过无疑</div>
             <div class="result-meme float-animation-delay-6" id="resultMeme"> meme文字 </div>
+            <div class="sim-block" id="simBlock">
+                <div class="sim-title">🎛️ 期末模拟器 <span class="logo-subtitle" style="display:inline">拖动看「考 X 分」的总评</span></div>
+                <div class="slider-label">
+                    <span class="slider-text">假设期末考</span>
+                    <span class="slider-value" id="simSliderValue">--分</span>
+                </div>
+                <input type="range" class="slider" id="simSlider" min="0" max="100" value="60" oninput="updateSim(this.value)">
+                <div class="sim-total" id="simTotal">总评 -- 分</div>
+            </div>
+            <div class="target-quick" id="targetQuick"></div>
             <button class="share-btn float-animation-delay-7" onclick="showShareModal()">
                 <span>📤</span>
                 分享急救方案

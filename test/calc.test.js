@@ -92,6 +92,28 @@ test('字符串数字(输入框原始值)可用:85×40% + 72×20%,目标80 → 7
   assert.strictEqual(r.needed, 79);
 });
 
+// ── computeTotal:期末模拟器(正向计算)───────────────────────
+test('模拟器:85×30% + 72×20% + 期末50×50% → 总评 64.9', () => {
+  const r = Calc.computeTotal({ usual: 85, usualWeight: 30, midterm: 72, midtermWeight: 20, final: 50 });
+  assert.strictEqual(r.ok, true);
+  assert.strictEqual(r.total, 64.9);
+});
+
+test('模拟器:整数值不受浮点污染(60×50% + 期末100)→ 80', () => {
+  const r = Calc.computeTotal({ usual: 60, usualWeight: 50, final: 100 });
+  assert.strictEqual(r.total, 80);
+});
+
+test('模拟器:两段制 + 字符串输入(80×40% + 期末70)→ 74', () => {
+  const r = Calc.computeTotal({ usual: '80', usualWeight: '40', midterm: '', midtermWeight: '', final: '70' });
+  assert.strictEqual(r.total, 74);
+});
+
+test('模拟器:期末占比 0 时拒绝模拟', () => {
+  const r = Calc.computeTotal({ usual: 85, usualWeight: 60, midterm: 90, midtermWeight: 40, final: 70 });
+  assert.strictEqual(r.ok, false);
+});
+
 // ── encodeState / decodeHash:分享链接 ───────────────────────────
 test('encode→decode 往返一致', () => {
   const s = { usual: '85', usualWeight: 40, midterm: '72', midtermWeight: '20', goal: 80 };

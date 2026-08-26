@@ -134,6 +134,31 @@
   }
 
   /**
+   * 正向计算:给定假设的期末分数,算总评(期末模拟器用)。
+   * @returns {{ok:true, total:number}} 或 {ok:false, error:string};total 保留 1 位小数。
+   */
+  function computeTotal(input) {
+    var usual = Number(input.usual);
+    var w1 = Number(input.usualWeight);
+    var hasMid = input.midterm !== '' && input.midterm != null;
+    var mid = hasMid ? Number(input.midterm) : 0;
+    var w2 = hasMid ? Number(input.midtermWeight || 0) : 0;
+    var fin = Number(input.final);
+
+    if (!isNum(input.usual) || usual < 0 || usual > WEIGHT_MAX) return { ok: false, error: '平时分需要在 0-100 之间' };
+    if (!isNum(input.usualWeight) || w1 < 0 || w1 > WEIGHT_MAX) return { ok: false, error: '平时分占比需要在 0-100 之间' };
+    if (!isNum(input.final) || fin < 0 || fin > WEIGHT_MAX) return { ok: false, error: '期末分数需要在 0-100 之间' };
+    if (hasMid && (!isNum(input.midtermWeight) || w2 < 0 || w2 > WEIGHT_MAX)) return { ok: false, error: '期中占比需要在 0-100 之间' };
+
+    var finalWeight = 1 - w1 / WEIGHT_MAX - w2 / WEIGHT_MAX;
+    if (finalWeight <= 0) return { ok: false, error: '期末占比已是 0,总评已定,模拟无意义' };
+
+    var total = (usual * w1 + mid * w2) / WEIGHT_MAX + fin * finalWeight;
+    // 浮点防护:0.1+0.2=0.30000000000000004 这类,四舍五入到 1 位小数
+    return { ok: true, total: Math.round(total * 10) / 10 };
+  }
+
+  /**
    * 生成分享文案。
    * @param {object} r computeNeeded 的成功结果
    */
@@ -144,5 +169,5 @@
     return '期末急救计算器:期末至少要考 ' + n + ' 分' + suffix + '!';
   }
 
-  return { computeNeeded: computeNeeded, encodeState: encodeState, decodeHash: decodeHash, formatShareText: formatShareText };
+  return { computeNeeded: computeNeeded, computeTotal: computeTotal, encodeState: encodeState, decodeHash: decodeHash, formatShareText: formatShareText };
 });
