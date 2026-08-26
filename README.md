@@ -1,35 +1,36 @@
-# 📊 期末急救计算器
+# 🚑 期末急救计算器
 
 <p align="center">
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
 <p align="center">
-  <strong>🎯 一款帮助学生快速计算期末成绩、判断是否能及格的在线工具</strong>
+  <img src="https://img.shields.io/github/actions/workflow/status/shangjian2023/pass-or-fail/ci.yml?branch=master&style=flat-square&label=CI" alt="CI">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero dependencies">
 </p>
 
 <p align="center">
-  <a href="#功能特点">功能特点</a> •
-  <a href="#使用方法">使用方法</a> •
-  <a href="#在线体验">在线体验</a> •
-  <a href="#技术栈">技术栈</a>
+  <strong>🎯 输入平时分和权重,立刻算出期末至少要考多少分才能不挂科</strong><br>
+  <a href="https://shangjian2023.github.io/pass-or-fail/">🚀 在线使用</a> ·
+  <a href="#-计算公式">计算公式</a> ·
+  <a href="#-faq">FAQ</a>
 </p>
 
 ---
 
 ## 📖 项目简介
 
-**期末急救计算器**是一款专为大学生设计的成绩计算工具。在期末考试来临之际，帮助学生快速计算：
+期末考试临近,很多同学都在焦虑"我还能及格吗"。这个工具帮你反推:
 
-- 📈 当前成绩能否及格？
-- 🎯 期末考试需要考多少分才能不挂科？
-- 📊 各项成绩占比情况
+- 📈 按你课程的**平时/期中/期末占比**,计算当前总评
+- 🎯 期末考试**至少需要考多少分**才能达到目标(及格 60 / 优秀 80 / 满绩 90 / 任意分数)
+- ☠️ 就算神仙难救,也会诚实告诉你差多少,而不是假装有救
 
-> 💡 **开发初衷**  
-> 期末考试临近，很多同学都在焦虑自己能不能及格。这个工具可以帮助大家快速算出期末考试需要考多少分，做到心中有数。
+> 💡 **开发初衷**
+> 期末周的人心惶惶,需要一个 10 秒出答案、不用装任何东西的小工具。
 
 ---
 
@@ -37,12 +38,45 @@
 
 | 功能 | 描述 |
 |------|------|
-| 🧮 **成绩计算** | 根据平时成绩、期中成绩、期末成绩占比，计算总成绩 |
-| 🎯 **目标分析** | 计算期末考试最低需要多少分才能及格 |
-| 📱 **响应式设计** | 完美适配手机、平板、电脑 |
-| 🎨 **急救主题** | 红十字风格设计，紧急感拉满 |
-| 🔒 **本地计算** | 所有数据在本地处理，保护隐私 |
-| ⚡ **零依赖** | 纯前端实现，无需安装任何依赖 |
+| 🧮 **三段制计算** | 平时分 + 期中分(可选)+ 期末占比,完整覆盖常见评分规则 |
+| 🎯 **任意目标分** | 及格 / 优秀 / 满绩快捷卡 + 0-100 滑杆精确调整 |
+| 💾 **本地记忆** | 输入自动存 localStorage,下次打开免重填 |
+| 🔗 **场景分享** | 一键生成带参数的链接,同学点开就是你算好的场景 |
+| ⌨️ **键盘操作** | 数字键直接输入,Enter 计算,Backspace 删位,Esc 清空 |
+| 📱 **响应式设计** | 手机、平板、电脑都可用 |
+| 🔒 **纯本地计算** | 无后端、无统计、无追踪,成绩数据不出浏览器 |
+| ⚡ **零依赖** | 不用 npm install,离线也能跑 |
+| 🎨 **Claude 风格设计** | 暖纸底 + 2px 墨色粗描边 + 赭橙点缀 + 硬偏移阴影,衬线大数字 |
+
+---
+
+## 🧮 计算公式
+
+总评 = 平时 × w₁ + 期中 × w₂ + 期末 × w₃(其中 w₁+w₂+w₃ = 100%)
+
+反推期末最低分:
+
+```
+期末至少需要 = ⌈ (目标总分 − 平时×w₁% − 期中×w₂%) ÷ (1 − w₁% − w₂%) ⌉
+```
+
+**示例**(对应测试用例,可在页面上复算):
+
+| 项目 | 数值 | 占比 |
+|------|------|------|
+| 平时成绩 | 85 | 30% |
+| 期中成绩 | 72 | 20% |
+| 目标总分 | 60 | — |
+| **期末至少需要** | **41 分** | 50% |
+
+`(60 − 85×0.30 − 72×0.20) ÷ 0.50 = 40.2 → 向上取整 41`
+
+边界情况的处理:
+
+- 需求 ≤ 0:**已经稳了**,期末考 0 分也过
+- 需求 > 100:**神仙难救**,明说差多少分,建议准备补考
+- 平时+期中占比 ≥ 100%:期末已无法影响总评,直接提示而非报错崩溃
+- 浮点防护:`31.6 ÷ 0.4` 这类算出 `79.00000000000001` 的情况做了修正,不会虚高 1 分
 
 ---
 
@@ -50,75 +84,91 @@
 
 ### 在线使用
 
-直接访问 GitHub Pages 部署版本，无需下载安装：
-
-👉 [在线体验](https://shangjian2023.github.io/pass-or-fail/)
+👉 https://shangjian2023.github.io/pass-or-fail/(GitHub Pages 自动部署,推送到 master 即发布)
 
 ### 本地运行
 
 ```bash
-# 克隆项目
 git clone https://github.com/shangjian2023/pass-or-fail.git
-
-# 进入项目目录
 cd pass-or-fail
-
-# 直接打开 index.html 即可使用
-# 或使用本地服务器
-python -m http.server 8080
-# 然后访问 http://localhost:8080
+# 任意一种方式:
+python -m http.server 8080   # → http://localhost:8080
+# 或者直接双击 index.html(file:// 也能用)
 ```
 
 ---
 
-## 📝 使用说明
-
-1. **输入平时成绩** - 平时作业、课堂表现等成绩
-2. **输入期中成绩** - 期中考试成绩（如有）
-3. **设置成绩占比** - 各项成绩占总成绩的百分比
-4. **查看结果** - 系统自动计算期末所需最低分数
-
-```
-示例：
-├── 平时成绩：85分（占比30%）
-├── 期中成绩：72分（占比20%）
-└── 期末成绩：需要 >= 58分 才能及格（占比50%）
-```
-
----
-
-## 🛠️ 技术栈
-
-- **HTML5** - 页面结构
-- **CSS3** - 样式设计（渐变、动画、响应式）
-- **JavaScript** - 逻辑处理
-- **Google Fonts** - Noto Sans SC 字体
-
----
-
-## 📁 项目结构
+## 🏗️ 项目结构
 
 ```
 pass-or-fail/
-├── index.html      # 单页面应用
-├── README.md       # 项目说明
-└── LICENSE         # MIT 许可证
+├── index.html            # 页面结构(语义化标签 + og/meta)
+├── css/
+│   ├── styles.css        # 设计系统:暖纸底/墨色粗描边/赭橙点缀/硬阴影/衬线大数字
+│   └── vendor/
+│       ├── modern-normalize.css  # 跨浏览器基线(MIT)
+│       └── animations.css        # 精选 keyframes,摘自 animate.css(MIT)
+├── js/
+│   ├── calc.js           # 纯计算模块:公式反推/分享编码/文案,无 DOM 依赖
+│   └── app.js            # 交互层:取值、渲染、事件、持久化
+├── test/
+│   └── calc.test.js      # 单元测试(node:test,17 个用例)
+├── .github/workflows/
+│   ├── ci.yml            # 语法检查 + 单测,Node 18/20/22 矩阵
+│   └── pages.yml         # GitHub Pages 自动部署
+├── LICENSE               # MIT
+└── README.md
 ```
+
+**计算与 UI 分离**:所有公式都在 `calc.js`(纯函数),浏览器挂 `window.Calc`,Node 里 `require()` 直接跑测试,不需要任何测试框架或依赖。
 
 ---
 
+## 🧪 开发与测试
+
+```bash
+node --test test/     # 17 个用例:正常路径、边界、非法输入、分享编解码
+```
+
+CI(GitHub Actions)在每次 push / PR 时对 Node 18/20/22 跑语法检查和全量测试。
+
+---
+
+## 📝 FAQ
+
+**Q: 为什么平时+期中占比不能达到 100%?**
+A: 那样期末占比就是 0,考多少都不影响总评,反推无意义——页面会直接提示"总评已定"。
+
+**Q: 我的数据会上传吗?**
+A: 不会。没有后端,没有统计脚本。输入记忆和"急救次数"都存在你自己浏览器的 localStorage,分享链接的参数在 `#` 后面,不会发给任何服务器。
+
+**Q: 分享链接打开是分享者的成绩场景吗?**
+A: 是。链接把平时分/占比/目标编码进 URL hash(如 `#u=85&w=40&m=72&mw=20&g=60`),打开即还原;你改了数字再分享,生成的是你自己的场景。
+
+**Q: 打不开或字体难看?**
+A: 页面对 Google Fonts 做了非阻塞加载,国内访问不了字体源时直接用系统字体,不白屏。
+
+---
+
+## 🎨 设计与致谢
+
+UI 采用 Claude 官网标志性的视觉语言:暖纸色背景、近黑墨色 2px 粗描边、赭橙(#D97757)点缀、硬偏移阴影与衬线标题字。跨浏览器基线与入场动效来自两个 MIT 开源库,已 vendor 化(本地打包,零构建、离线可用):
+
+- [modern-normalize](https://github.com/sindresorhus/modern-normalize) — 浏览器样式基线
+- [animate.css](https://github.com/animate-css/animate.css) — `fadeInUp / bounceIn / shakeX / pulse / heartBeat` 等 keyframes 子集
+
+自研部分(结果卡状态色、路障条纹进度条、按钮位移反馈、`prefers-reduced-motion` 降级)在 `css/styles.css`。
+
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request！
+欢迎 Issue 和 PR!改动计算逻辑请同时补 `test/calc.test.js` 用例,CI 会跑全量测试。
 
 ---
 
 ## 📄 许可证
 
-本项目采用 [MIT](LICENSE) 许可证。
+[MIT](LICENSE) © 2026 shangjian2023
 
 ---
 
-<p align="center">
-  Made with ❤️ for students
-</p>
+<p align="center">Made with ❤️ for students</p>
