@@ -127,7 +127,7 @@ pass-or-fail/
 ## 🧪 开发与测试
 
 ```bash
-node --test test/     # 17 个用例:正常路径、边界、非法输入、分享编解码
+node --test test/*.test.js   # 17 个用例:正常路径、边界、非法输入、分享编解码
 ```
 
 CI(GitHub Actions)在每次 push / PR 时对 Node 18/20/22 跑语法检查和全量测试。

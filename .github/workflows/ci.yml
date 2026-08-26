@@ -22,4 +22,4 @@ jobs:
           node --check js/calc.js
           node --check js/app.js
       - name: Unit tests (zero dependencies)
-        run: node --test test/
+        run: node --test test/*.test.js
