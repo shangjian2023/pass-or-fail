@@ -948,3 +948,140 @@ body::before {
   }
   .countdown-bar::after { animation: none; }
 }
+
+
+/* ══════════════════════════════════════════════════════
+ * 炫技动效层
+ * keyframes 来自三家 MIT 开源库(vendor 于 css/vendor/):
+ *   animate.css / Hover.css / CSShake
+ * 另含少量自研 keyframes
+ * ══════════════════════════════════════════════════════ */
+
+/* 背景星芒永动机:整页"活着"的呼吸感 */
+.emergency-cross {
+  animation: hvr-bob 8s ease-in-out infinite;
+}
+
+.cross-2 {
+  animation-delay: -4s;
+  animation-duration: 11s;
+}
+
+/* 页头:徽标入场翻转,标题悬停打摆 */
+.logo-icon {
+  animation: rotateIn .8s ease both;
+}
+
+.logo:hover {
+  animation: hvr-wobble-horizontal 1s ease-in-out;
+}
+
+/* 急救模式徽章:悬停电流嗡鸣(hvr-buzz),并保留阴影位移 */
+.countdown-badge:hover {
+  animation: hvr-buzz 0.8s linear;
+}
+
+/* 数字键盘:悬停轻浮(bob),清除键专属抖动 */
+.numpad-btn:hover {
+  animation: hvr-bob 1.2s ease-in-out infinite;
+}
+
+.numpad-btn.clear:hover {
+  animation: pofBuzzOut 0.8s linear;
+}
+
+@keyframes pofBuzzOut {
+  10% { transform: translateX(3px) rotate(2deg); }
+  20% { transform: translateX(-3px) rotate(-2deg); }
+  30% { transform: translateX(3px) rotate(2deg); }
+  40% { transform: translateX(-3px) rotate(-2deg); }
+  50% { transform: translateX(2px) rotate(1deg); }
+  60% { transform: translateX(-2px) rotate(-1deg); }
+  70% { transform: translateX(2px) rotate(1deg); }
+  80% { transform: translateX(-2px) rotate(-1deg); }
+  90% { transform: translateX(1px) rotate(0); }
+  100% { transform: translateX(-1px) rotate(0); }
+}
+
+/* 权重气泡:悬停心跳放大,选中时 tada庆祝 */
+.weight-bubble:hover {
+  animation: hvr-pulse-grow 1.2s linear infinite;
+}
+
+.weight-bubble.selected {
+  animation: tada 1s ease both;
+}
+
+/* 目标卡:悬停弹跳(pop),选中时果冻(jello) */
+.goal-card:hover {
+  animation: hvr-pop 0.5s linear both;
+}
+
+.goal-card.selected {
+  animation: jello 1s ease both;
+}
+
+/* 非法占比提示:闪两下再抖(CSShake base) */
+.weight-hint.bad {
+  animation: flash 0.6s ease 2;
+}
+
+/* 结果图标按诊断等级演出 */
+.result-card.easy .result-icon {
+  animation: bounceIn 0.6s ease both, heartBeat 1.3s ease-in-out 0.8s infinite;
+}
+
+.result-card.normal .result-icon {
+  animation: bounceIn 0.6s ease both, tada 0.9s ease 0.7s both;
+}
+
+.result-card.hard .result-icon {
+  animation: bounceIn 0.6s ease both, wobble 1s ease 0.7s both;
+}
+
+.result-card.extreme .result-icon {
+  animation: bounceIn 0.6s ease both, swing 1.4s ease-in-out 0.8s infinite;
+}
+
+/* 结果大数字:X 轴翻牌入场 */
+.result-card.show .result-score {
+  animation: flipInX 0.7s ease both 0.15s;
+}
+
+/* 稳过的行动条闪星光 */
+.result-card.easy .result-action {
+  animation: flash 1s ease 2;
+}
+
+/* 危级梗文案:疯狗抖动(CSShake crazy) */
+.result-card.extreme .result-meme {
+  animation: shake-crazy 1s ease-in-out both 0.4s;
+}
+
+/* 分享弹窗:缩放入场 + 文案打滚(rollIn) */
+.modal-overlay.show .share-card {
+  animation: zoomIn 0.4s ease both;
+}
+
+.modal-overlay.show .share-message {
+  animation: rollIn 0.5s ease both 0.15s;
+}
+
+/* 彩蛋:宝箱弹跳(jackInTheBox),数值心跳 */
+.modal-overlay.show .easter-egg-icon {
+  animation: jackInTheBox 1s ease both;
+}
+
+.modal-overlay.show .easter-egg-stat-value {
+  animation: heartBeat 1s ease-in-out both 0.5s;
+}
+
+/* Toast:从底部滑入更远的距离(slideInUp) */
+.error-toast.show {
+  animation: slideInUp 0.35s ease both;
+}
+
+/* 主按钮按下时果冻回弹(与 pulse 悬停互补) */
+.calculate-btn:active {
+  animation: jello 0.6s ease both;
+}

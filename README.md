@@ -107,10 +107,14 @@ pass-or-fail/
 │   ├── styles.css        # 设计系统:暖纸底/墨色粗描边/赭橙点缀/硬阴影/衬线大数字
 │   └── vendor/
 │       ├── modern-normalize.css  # 跨浏览器基线(MIT)
-│       └── animations.css        # 精选 keyframes,摘自 animate.css(MIT)
+│       ├── animations.css        # 25 个精选 keyframes,摘自 animate.css(MIT)
+│       ├── hover.css             # 悬停特效 keyframes,摘自 Hover.css(MIT)
+│       └── csshake.css           # 抖动 keyframes,摘自 CSShake(MIT)
 ├── js/
 │   ├── calc.js           # 纯计算模块:公式反推/分享编码/文案,无 DOM 依赖
-│   └── app.js            # 交互层:取值、渲染、事件、持久化
+│   ├── app.js            # 交互层:取值、渲染、事件、持久化、彩带触发
+│   └── vendor/
+│       └── canvas-confetti.js  # 彩带礼花引擎(MIT)
 ├── test/
 │   └── calc.test.js      # 单元测试(node:test,17 个用例)
 ├── .github/workflows/
@@ -155,9 +159,12 @@ A: 页面对 Google Fonts 做了非阻塞加载,国内访问不了字体源时�
 UI 采用 Claude 官网标志性的视觉语言:暖纸色背景、近黑墨色 2px 粗描边、赭橙(#D97757)点缀、硬偏移阴影与衬线标题字。跨浏览器基线与入场动效来自两个 MIT 开源库,已 vendor 化(本地打包,零构建、离线可用):
 
 - [modern-normalize](https://github.com/sindresorhus/modern-normalize) — 浏览器样式基线
-- [animate.css](https://github.com/animate-css/animate.css) — `fadeInUp / bounceIn / shakeX / pulse / heartBeat` 等 keyframes 子集
+- [animate.css](https://github.com/animate-css/animate.css) — `fadeInUp / bounceIn / tada / jello / wobble / swing / flipInX / rollIn / jackInTheBox` 等 25 个 keyframes
+- [Hover.css](https://github.com/IanLunn/Hover) — `hvr-bob / hvr-buzz / hvr-pop / hvr-pulse-grow / hvr-wobble-horizontal` 悬停特效
+- [CSShake](https://github.com/eltonmesquita/CSShake) — `shake-crazy` 等抖动特效
+- [canvas-confetti](https://github.com/catdad/canvas-confetti) — 结果彩带(稳过礼炮 / 彩蛋好运,遵循 `prefers-reduced-motion` 降级)
 
-自研部分(结果卡状态色、路障条纹进度条、按钮位移反馈、`prefers-reduced-motion` 降级)在 `css/styles.css`。
+动效分配原则:入场用 animate.css,悬停用 Hover.css,错误/危级用 CSShake,庆祝用 canvas-confetti;自研部分(结果卡状态色、路障条纹进度条、按钮位移反馈、全站 `prefers-reduced-motion` 降级)在 `css/styles.css`。
 
 ## 🤝 贡献
 

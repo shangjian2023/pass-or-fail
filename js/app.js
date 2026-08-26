@@ -234,6 +234,27 @@
     showResult(r);
   }
 
+  // ── 彩带(canvas-confetti v1.9,MIT,vendor 于 js/vendor/)─────
+  function fireConfetti(kind) {
+    if (typeof window.confetti !== 'function') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var colors = ['#D97757', '#C4633F', '#FAF9F5', '#6C8F6A', '#1F1E1D'];
+    try {
+      if (kind === 'easy') {
+        // 稳了:两侧礼炮 + 中央散花
+        window.confetti({ particleCount: 80, angle: 60, spread: 70, origin: { x: 0, y: 0.75 }, colors: colors });
+        window.confetti({ particleCount: 80, angle: 120, spread: 70, origin: { x: 1, y: 0.75 }, colors: colors });
+        window.confetti({ particleCount: 50, spread: 100, origin: { y: 0.6 }, colors: colors });
+      } else if (kind === 'normal') {
+        // 问题不大:小规模庆祝
+        window.confetti({ particleCount: 45, spread: 60, origin: { y: 0.7 }, colors: colors });
+      } else if (kind === 'lucky') {
+        // 彩蛋"领取好运"
+        window.confetti({ particleCount: 60, spread: 75, origin: { y: 0.55 }, colors: colors, scalar: 0.9 });
+      }
+    } catch (e) { /* 彩带失败不影响功能 */ }
+  }
+
   // ── 结果渲染 ──────────────────────────────────────────────────
   function showResult(r) {
     var resultCard = $('resultCard');
@@ -278,6 +299,7 @@
     }, 150);
 
     playSound();
+    fireConfetti(r.status);
   }
 
   var animTimer = null;
@@ -378,6 +400,7 @@
   function hideEasterEgg() {
     $('easterEggModal').classList.remove('show');
     $('luckFill').style.width = '0%';
+    fireConfetti('lucky'); // 领好运,来一发
   }
 
   function closeModal(event) {

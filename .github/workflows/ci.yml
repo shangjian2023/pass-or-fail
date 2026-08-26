@@ -21,5 +21,6 @@ jobs:
         run: |
           node --check js/calc.js
           node --check js/app.js
+          node --check js/vendor/canvas-confetti.js
       - name: Unit tests (zero dependencies)
         run: node --test test/*.test.js
